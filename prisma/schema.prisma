@@ -1,0 +1,242 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User & Authentication
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+
+  // Google Calendar OAuth
+  googleAccessToken  String?
+  googleRefreshToken String?
+  googleTokenExpiry  DateTime?
+
+  // Preferences (stored as JSON)
+  preferences Json?
+
+  // Relations
+  tasks         Task[]
+  habits        Habit[]
+  journalEntries JournalEntry[]
+  calendarEvents CalendarEvent[]
+  tags          Tag[]
+  accounts      Account[]
+  sessions      Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// NextAuth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================
+// Tasks & Projects (Notion-style)
+// ============================================
+
+model Task {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  status      String   @default("todo") // todo, in_progress, done, archived
+  priority    String?  // low, medium, high
+
+  // Notion-style properties (flexible JSON for custom fields)
+  properties  Json?
+
+  // Dates
+  dueDate     DateTime?
+  startDate   DateTime?
+  completedAt DateTime?
+
+  // Relations
+  tags        Tag[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+// ============================================
+// Habits & Tracking
+// ============================================
+
+model Habit {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  icon        String?  // emoji or icon name
+  color       String?  // hex color for visual identity
+
+  // Frequency
+  frequency   String   @default("daily") // daily, weekly, custom
+  targetDays  String?  // JSON array like ["mon", "wed", "fri"]
+
+  // Tracking
+  streak      Int      @default(0)
+  longestStreak Int    @default(0)
+  lastCompletedAt DateTime?
+
+  // Relations
+  logs        HabitLog[]
+
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isActive])
+}
+
+model HabitLog {
+  id          String   @id @default(cuid())
+  habitId     String
+  habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  completedAt DateTime @default(now())
+  note        String?
+  mood        String?  // optional mood tracking
+
+  @@index([habitId])
+  @@index([completedAt])
+}
+
+// ============================================
+// Journal & Reflections
+// ============================================
+
+model JournalEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title     String?
+  content   String   // Rich text stored as JSON or Markdown
+  mood      String?  // happy, calm, anxious, reflective, etc.
+
+  // Relations
+  tags      Tag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ============================================
+// Calendar & Events (Google Calendar Sync)
+// ============================================
+
+model CalendarEvent {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Google Calendar sync
+  googleEventId String?  @unique
+
+  title         String
+  description   String?
+  location      String?
+
+  startTime     DateTime
+  endTime       DateTime
+  isAllDay      Boolean  @default(false)
+
+  // Attendees (stored as JSON)
+  attendees     Json?
+
+  // Reminders
+  reminderMinutes Int?
+
+  // Sync status
+  syncStatus    String   @default("synced") // synced, pending, error
+  lastSyncedAt  DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([startTime])
+  @@index([googleEventId])
+}
+
+// ============================================
+// Tags (for organizing tasks, journal entries)
+// ============================================
+
+model Tag {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name          String
+  color         String?  // hex color
+
+  // Relations
+  tasks         Task[]
+  journalEntries JournalEntry[]
+
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, name])
+  @@index([userId])
+}
