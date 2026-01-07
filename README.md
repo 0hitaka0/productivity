@@ -14,7 +14,7 @@ A beautiful, calming productivity app designed for your unique MBTI personality.
 
 ## 🚀 Getting Started
 
-See [SETUP.md](./SETUP.md) for detailed setup instructions.
+See [AGENT.md](./AGENT.md) for detailed setup instructions and project documentation.
 
 Quick start:
 
@@ -47,7 +47,7 @@ This app is built around mindful values:
 
 ## 📖 Documentation
 
-- [Setup Guide](./SETUP.md) - Complete setup instructions
+- [Project Documentation](./AGENT.md) - Complete setup, architecture, and guidelines
 - [Database Schema](./prisma/schema.prisma) - All models and relations
 
 ---

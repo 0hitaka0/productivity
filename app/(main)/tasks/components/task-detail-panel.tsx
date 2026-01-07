@@ -6,7 +6,7 @@ import { X, CheckCircle2, Circle, Plus, MoreVertical, ChevronRight, Trash2, Cale
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Task } from './task-card';
-import { DatePicker, PriorityPicker, DurationPicker, CategoryPicker, PriorityLevel } from '@/components/tasks/pickers';
+import { DatePicker, PriorityPicker, DurationPicker, CategoryPicker, PriorityLevel } from './pickers';
 import { format } from 'date-fns';
 import { Particles } from '@/components/ui/particles';
 

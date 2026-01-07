@@ -5,7 +5,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import { MoodSelector, MoodData } from '@/components/mood-selector';
-import { PromptCard } from '@/components/prompt-card';
+import { PromptCard } from './prompt-card';
 import { useDebounce } from '@/lib/hooks';
 import { Loader2, Maximize2, Minimize2, Save, Bold, Italic, List, Quote, Heading1, Heading2, RotateCcw, RotateCw } from 'lucide-react';
 import { cn } from '@/lib/utils';

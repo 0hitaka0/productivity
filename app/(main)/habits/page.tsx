@@ -1,4 +1,4 @@
-import { HabitTrackerView } from '@/components/habits/habit-tracker-view';
+import { HabitTrackerView } from './components/habit-tracker-view';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

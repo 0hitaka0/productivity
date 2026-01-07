@@ -12,7 +12,7 @@ import {
     MoreHorizontal, Link as LinkIcon, Folder, Bell, Repeat,
     Trash2, Search
 } from 'lucide-react';
-import { DatePicker, PriorityPicker, DurationPicker, CategoryPicker } from '@/components/tasks/pickers';
+import { DatePicker, PriorityPicker, DurationPicker, CategoryPicker } from './pickers';
 import { parseTaskInput } from '@/lib/smart-input';
 import { cn } from '@/lib/utils';
 import { format, addDays, nextSaturday, nextMonday, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, startOfToday } from 'date-fns';

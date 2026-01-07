@@ -47,3 +47,31 @@
 - **Database Migration**: `npx prisma migrate dev`
 - **View Database**: `npx prisma studio`
 - **Docker Build**: `docker compose up --build`
+
+## Setup & Configuration
+### 1. Environment Variables
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+
+**Required Variables:**
+- `DATABASE_URL`: Connection string for PostgreSQL (e.g., `postgresql://...`).
+- `NEXTAUTH_SECRET`: Generate with `openssl rand -base64 32`.
+- `NEXTAUTH_URL`: `http://localhost:3000` (for dev).
+
+**Optional (External Services):**
+- `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`: For Google Calendar integration.
+    - Create credentials in Google Cloud Console.
+    - Authorized Redirect URI: `http://localhost:3000/api/auth/callback/google`
+
+### 2. Database Setup
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### 3. Development Server
+```bash
+npm run dev
+```

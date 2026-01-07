@@ -6,7 +6,7 @@ import { Loader2, PenLine, CheckSquare, Target, Sparkles, ArrowRight, Book } fro
 import Link from 'next/link';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PersonalizedGreeting } from '@/components/personalized-greeting';
-import { TypeSpecificPrompt } from '@/components/type-specific-prompt';
+import { TypeSpecificPrompt } from './type-specific-prompt';
 import { MBTIType } from '@/lib/mbti-data';
 import { DashboardMoodMeter } from './mood-meter';
 import { useMBTI } from "@/components/providers/mbti-provider";

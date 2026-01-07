@@ -1,4 +1,4 @@
-import { TasksView } from '@/components/tasks/tasks-view';
+import { TasksView } from './components/tasks-view';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
