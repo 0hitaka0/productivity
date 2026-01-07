@@ -20,6 +20,7 @@ model User {
   name          String?
   image         String?
   emailVerified DateTime?
+  passwordHash  String?
 
   // Google Calendar OAuth
   googleAccessToken  String?
@@ -28,6 +29,7 @@ model User {
 
   // Preferences (stored as JSON)
   preferences Json?
+  mbtiType    String? // Stored as string e.g., "INFJ"
 
   // Relations
   tasks         Task[]
@@ -35,8 +37,12 @@ model User {
   journalEntries JournalEntry[]
   calendarEvents CalendarEvent[]
   tags          Tag[]
+  categories    Category[] 
   accounts      Account[]
   sessions      Session[]
+  moods         Mood[]
+  goals         Goal[] 
+  insights      Insight[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -90,15 +96,33 @@ model Task {
   title       String
   description String?
   status      String   @default("todo") // todo, in_progress, done, archived
-  priority    String?  // low, medium, high
+  priority    String?  // low, medium, high, critical
+  
+  // Organization
+  order       Float    @default(0) // For Drag & Drop sorting
+  category    String?  // work, personal, health, etc.
+  
+  // Hierarchy (Subtasks)
+  parentId    String?
+  parent      Task?    @relation("SubTasks", fields: [parentId], references: [id], onDelete: Cascade)
+  subtasks    Task[]   @relation("SubTasks")
 
+  // Recurrence & Time
+  isRecurring      Boolean  @default(false)
+  recurrenceRule   String?  // RRULE string
+  dueDate          DateTime?
+  startDate        DateTime?
+  completedAt      DateTime?
+  
+  // Duration Tracking (in minutes)
+  estimatedDuration Int?
+  actualDuration    Int?
+
+  // Personalization
+  mbtiContext     Json?    // AI-generated suggestions, type-specific prompts
+  
   // Notion-style properties (flexible JSON for custom fields)
   properties  Json?
-
-  // Dates
-  dueDate     DateTime?
-  startDate   DateTime?
-  completedAt DateTime?
 
   // Relations
   tags        Tag[]
@@ -109,6 +133,7 @@ model Task {
   @@index([userId])
   @@index([status])
   @@index([dueDate])
+  @@index([parentId])
 }
 
 // ============================================
@@ -122,12 +147,25 @@ model Habit {
 
   name        String
   description String?
+  motivation  String?  // Personal motivation text
   icon        String?  // emoji or icon name
   color       String?  // hex color for visual identity
 
-  // Frequency
+  // Frequency & Schedule
   frequency   String   @default("daily") // daily, weekly, custom
   targetDays  String?  // JSON array like ["mon", "wed", "fri"]
+  timeOfDay   String   @default("anytime") // morning, afternoon, evening, anytime
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+
+  // Goals
+  goalType    String   @default("simple") // simple (yes/no), quantity, duration
+  goalTarget  Int?     // e.g., 8 (glasses), 30 (minutes)
+  goalUnit    String?  // e.g., "glasses", "minutes"
+  
+  // Organization
+  category    String?  // health, mindfulness, etc.
+  reminders   String?  // JSON string of reminder objects
 
   // Tracking
   streak      Int      @default(0)
@@ -137,7 +175,7 @@ model Habit {
   // Relations
   logs        HabitLog[]
 
-  isActive    Boolean  @default(true)
+  isActive    Boolean  @default(true) // false = archived
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -150,12 +188,18 @@ model HabitLog {
   habitId     String
   habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
 
+  date        DateTime // YYYY-MM-DDT00:00:00Z (normalized date)
   completedAt DateTime @default(now())
+  
+  status      String   @default("completed") // completed, skipped, missed
+  value       Int?     // For quantity/duration goals
+  
   note        String?
   mood        String?  // optional mood tracking
 
+  @@unique([habitId, date]) // Ensure one log per habit per day
   @@index([habitId])
-  @@index([completedAt])
+  @@index([date])
 }
 
 // ============================================
@@ -170,9 +214,20 @@ model JournalEntry {
   title     String?
   content   String   // Rich text stored as JSON or Markdown
   mood      String?  // happy, calm, anxious, reflective, etc.
+  wordCount Int?
+  
+  isArchived Boolean @default(false)
+  isPrivate  Boolean @default(false)
 
   // Relations
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  deletedAt  DateTime?
   tags      Tag[]
+  
+  // New Relations
+  moodEntry  Mood[]
+  goals      Goal[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -220,7 +275,98 @@ model CalendarEvent {
 }
 
 // ============================================
-// Tags (for organizing tasks, journal entries)
+// Categories & Collections
+// ============================================
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("#a855f7") // Default purple
+  icon      String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries   JournalEntry[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+// ============================================
+// Mood Tracking & Analysis
+// ============================================
+
+model Mood {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  journalId     String?
+  journalEntry  JournalEntry? @relation(fields: [journalId], references: [id])
+
+  moodValue     Int      // 1-10
+  emotions      String   // JSON array of strings e.g., ["sad", "anxious"]
+  intensity     Int?     // 1-5
+  physicalState Json?    // { energy: 5, sleep: 7, exercise: true }
+  context       String?  // JSON array e.g., ["work", "health"]
+  notes         String?
+
+  recordedAt    DateTime @default(now())
+  
+  @@index([userId])
+  @@index([recordedAt])
+}
+
+// ============================================
+// Goals & Personal Growth
+// ============================================
+
+model Goal {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  category    String?  // health, career, relationships
+  
+  targetDate  DateTime?
+  status      String   @default("active") // active, paused, completed, abandoned
+  progress    Int      @default(0) // 0-100
+
+  // Relations
+  linkedEntries JournalEntry[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ============================================
+// AI Insights & Patterns
+// ============================================
+
+model Insight {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type          String   // pattern, growth, value_alignment, mbti_specific
+  title         String
+  content       String   @default("")
+  importance    Int      @default(1) // 1-5
+
+  generatedAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ============================================
+// Tags (Enhanced)
 // ============================================
 
 model Tag {
@@ -229,7 +375,8 @@ model Tag {
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   name          String
-  color         String?  // hex color
+  color         String?
+  frequency     Int      @default(1)
 
   // Relations
   tasks         Task[]

@@ -1,0 +1,73 @@
+# Next.js
+
+Run the `init` command to create a new Next.js project or to setup an existing one:
+
+```
+npx @tiptap/cli@latest init
+```
+
+Choose between a `Next.js` project or a `Monorepo`.
+
+When prompted with:
+
+```
+Would you like to add a template or UI components to your project?
+```
+
+Select **UI Components** if you want to include reusable Tiptap UI components. Alternatively, select **Template** to scaffold a full example project.
+
+### Only add styles
+
+If you added a template or UI components during setup, you can skip this section and proceed directly to **Add Styles**.
+
+## [](#add-tiptap-components)Add Tiptap components
+
+Install Tiptap UI components using the CLI. For example, to add the `HeadingButton` component:
+
+```
+npx @tiptap/cli@latest add heading-button
+```
+
+The command above will install the `HeadingButton` component and its dependencies. You can then import and use it in your **Tiptap** project:
+
+```
+import { HeadingButton } from '@/components/ui/heading-button'
+
+export default function App() {
+  // Tiptap ...
+
+  return (
+    <>
+      <HeadingButton level={1}>Heading 1</HeadingButton>
+      <HeadingButton level={2}>Heading 2</HeadingButton>
+      <HeadingButton level={3}>Heading 3</HeadingButton>
+    </>
+  )
+}
+```
+
+## [](#add-styles)Add Styles
+
+### Styles are added automatically
+
+When you install your first Tiptap UI Component, the CLI automatically adds the required `.scss` imports to your main stylesheet. In most cases, **no manual setup is needed**.
+
+Before proceeding, ensure your project includes a CSS reset. If you are using Tailwind CSS, you already have one.
+
+#### [](#where-styles-are-imported)Where styles are imported
+
+The CLI automatically injects style imports into your global stylesheet, such as:
+
+-   `app/globals.css`
+-   `src/app/globals.css`
+
+If you’ve customized your entry file, make sure this is present:
+
+**File:** `app/globals.css` or `src/app/globals.css` (depending on your project)
+
+```
+@import '<path-to-styles>/_variables.scss';
+@import '<path-to-styles>/_keyframe-animations.scss';
+```
+
+Learn more about configuring styles in the [style setup guide](/docs/ui-components/getting-started/style).

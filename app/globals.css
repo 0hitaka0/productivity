@@ -5,21 +5,41 @@
 @layer base {
   :root {
     --radius: 0.75rem;
+
+    /* Default Cosmic (INFJ-ish) */
+    --theme-primary: 168 85 247;
+    /* Purple 500 */
+    --theme-secondary: 236 72 153;
+    /* Pink 500 */
+    --theme-bg-opacity: 0.4;
   }
 
   body {
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Drastically lower contrast for "soft" feel */
+    @apply bg-black text-slate-400 antialiased;
+  }
+
+  /* Headings slightly brighter but not pure white */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-slate-200;
   }
 
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
   }
 
-  /* Custom scrollbar - subtle and calm */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -27,31 +47,34 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-sage-300 dark:bg-midnight-700 rounded-full;
+    @apply bg-white/10 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-sage-400 dark:bg-midnight-600;
+    @apply bg-white/20;
   }
 }
 
 @layer utilities {
-  /* Gentle transitions for everything */
   .transition-gentle {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Glass morphism effect */
-  .glass {
-    @apply bg-white/80 dark:bg-midnight-900/80 backdrop-blur-md border border-sage-200 dark:border-midnight-700;
+  /* Glass morphism effect adapted for dynamic themes */
+  .glass-card {
+    background-color: rgba(0, 0, 0, var(--theme-bg-opacity));
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Dynamic colored border glow */
+    border-color: rgba(var(--theme-primary), 0.2);
   }
 
-  /* Soft shadow for depth */
   .shadow-soft {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   }
 
-  .shadow-soft-lg {
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.04);
+  .shadow-glow {
+    /* Use CSS variable properly if converted to RGB values, for now keeping simple purple default fallback */
+    box-shadow: 0 0 20px -5px rgba(168, 85, 247, 0.15);
   }
 }

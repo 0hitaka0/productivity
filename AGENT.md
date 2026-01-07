@@ -1,58 +1,67 @@
-# Agent Documentation
+# Project Agent Documentation
 
 ## Project Overview
-This project is a productivity application focused on a "gentle" approach to task management and habit building. It utilizes Next.js with the App Router, Shadcn UI for components, and Tailwind CSS for styling.
+Hitaka is a productivity application designed to help users manage habits, tasks, journals, and track their personal growth. It leverages MBTI types for personalized reflections and insights.
+Built with **Next.js 16**, **TypeScript**, **Tailwind CSS**, and **Prisma** (PostgreSQL).
 
 ## Directory Structure
-The project follows a standard Next.js App Router structure with a focus on colocation for feature-specific components.
-
-### `app/`
-Contains the application routes and pages.
-- `app/(app)/`: The main authenticated application layout.
-- `app/(app)/dashboard/`: Dashboard feature.
-  - `components/`: Feature-specific components colocated here.
-- `app/api/`: API routes.
-
-### `components/`
-- `ui/`: Shared, atomic UI components (Shadcn UI).
-- `layout/`: Global layout components (Sidebar, Header).
-
-### `lib/`
-Utility functions and database helpers.
+```
+.
+├── app/                  # Next.js App Router pages and API routes
+│   ├── (main)/           # Main application layout group
+│   ├── api/              # API endpoints
+│   ├── dashboard/        # Dashboard specific routes (legacy/redirects?)
+│   └── ...
+├── components/           # React components
+│   ├── dashboard/        # Dashboard-specific components
+│   ├── features/         # Feature-specific components
+│   ├── ui/               # Reusable UI components (shadcn/ui)
+│   └── ...
+├── lib/                  # Utility functions and shared logic
+├── prisma/               # Database schema and migrations
+├── public/               # Static assets
+└── ...
+```
 
 ## Conventions & Patterns
-
-### Colocation
-- **Do**: Store components specific to a feature within that feature's directory (e.g., `dashboard/components`).
-- **Don't**: Dump everything into a global `components/` folder unless it is truly shared across multiple features.
-
-### Styling
-- Use Tailwind CSS for all styling.
-- Use the predefined color palette (midnight, sage, lavender, cream) to maintain the "gentle" aesthetic.
-- Support Dark Mode using the `dark:` prefix.
-
-### Components
-- Use functional components.
-- Use the `export function` syntax.
-- Ensure all text contrasts meet accessibility standards.
+- **Components**: Functional components using TypeScript. Place feature-specific components in `components/<feature>/` or `components/features/<feature>/`.
+- **UI Components**: Use `components/ui` for generic design system elements (buttons, inputs, etc.).
+- **Styling**: Tailwind CSS for styling. Use `clsx` or `tailwind-merge` for class manipulation.
+- **State Management**: React hooks and context where necessary. `sonner` for toasts.
+- **Data Fetching**: Server Components for data fetching where possible. API routes for client-side interactions.
+- **Database**: Prisma ORM. Update `schema.prisma` for DB changes and run `npx prisma migrate dev`.
+- **Authentication**: NextAuth.js (v5 beta) handling sessions.
 
 ## Domain Knowledge
-- **Gentle Productivity**: The app avoids "hustle culture" language. Use terms like "Intentions", "Reflections", "Gentle overview", "Peace of mind".
-- **Design Language**: Soft shadows, rounded corners, pastel/calming colors.
+- **MBTI**: The app uses Myers-Briggs Type Indicator to personalize content (reflections, greetings).
+- **Habits**: Daily tracking of positive routines.
+- **Journaling**: Mood tracking and text entries.
+- **Tasks**: To-do list management.
 
 ## Do's and Don'ts
-- **DO** keep the file structure flat where possible.
 - **DO** use semantic HTML.
-- **DON'T** remove the `.gemini` folder or its contents.
-- **DON'T** mix different styling libraries (e.g., no raw CSS modules if Tailwind can do it).
+- **DO** keep components small and focused.
+- **DO** use the `components/ui` library for consistency.
+- **DON'T** put business logic in UI components if it can be extracted to hooks or utils.
+- **DON'T** leave unused files or test scripts in production folders.
+- **DON'T** hardcode secrets. Use environment variables.
 
 ## Common Tasks
+### Running Locally
+```bash
+npm run dev
+```
 
-### Adding a New Feature
-1. Create a new directory in `app/(app)/[feature-name]`.
-2. Create `page.tsx` for the route.
-3. If complex, create a `components/` subdirectory within it.
+### Database Migration
+```bash
+npx prisma migrate dev
+```
 
-### Modifying the Theme
-- Update `tailwind.config.ts` for global color changes.
-- Update `app/globals.css` for base styles.
+### Adding a Component
+1. Check `components/ui` first.
+2. If it's a new feature, create `components/<feature>/<component-name>.tsx`.
+
+### Docker Build
+```bash
+docker-compose up --build
+```

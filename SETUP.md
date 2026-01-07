@@ -1,6 +1,6 @@
 # 🌙 Clarity Setup Guide
 
-Welcome to your INFJ productivity sanctuary! This guide will help you get everything set up and running smoothly.
+Welcome to your productivity sanctuary! This guide will help you get everything set up and running smoothly.
 
 ## ✨ Quick Start
 
@@ -109,7 +109,7 @@ productivity/
 
 ### Current Features ✅
 
-- **Beautiful UI**: INFJ-friendly design with sage, lavender, cream, and midnight colors
+- **Beautiful UI**: Aesthetic design with themes tailored to different energy levels
 - **Dark Mode**: Automatic theme switching with localStorage persistence
 - **Responsive Layout**: Sidebar navigation with smooth animations
 - **Database Schema**: Complete models for tasks, habits, journal, and calendar
@@ -176,7 +176,7 @@ npx prisma migrate reset
 
 ---
 
-## 💡 Tips for INFJ Developers
+## 💡 Tips for Developers
 
 - **Take breaks**: The app is designed to support gentle productivity, and so is this codebase
 - **Iterate slowly**: Build one feature at a time, test it, feel it
@@ -226,4 +226,4 @@ lsof -ti:3000 | xargs kill
 
 **You got this.** ✨
 
-Built with intention, care, and calm energy for INFJs who want to work with clarity and peace.
+Built with intention, care, and calm energy for anyone who wants to work with clarity and peace.

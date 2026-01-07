@@ -6,59 +6,69 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class", // or 'media' or 'class' - we probably want to force dark or stick to class
   theme: {
     extend: {
       colors: {
-        // INFJ-friendly color palette - soft, calming, intentional
+        // High contrast, premium cosmic palette
+        background: "#000000",
+        foreground: "#ffffff",
+        card: "#0a0a0a",
+        "card-foreground": "#ffffff",
+
+        // Renaming Sage/Lavender to something more "Cosmic Tech"
+        // But keeping the keys compatible where possible or doing a hard replace?
+        // Let's do a hard replace of the palette to be cleaner.
+
+        // Neutral greys (Stardust)
+        slate: {
+          800: "#1e293b",
+          900: "#0f172a",
+          950: "#020617",
+        },
+
+        // Accents (Nebula)
+        primary: {
+          DEFAULT: "#ffffff",
+          foreground: "#000000",
+        },
+        secondary: {
+          DEFAULT: "#27272a",
+          foreground: "#ffffff",
+        },
+        accent: {
+          DEFAULT: "#a855f7", // Purple
+          foreground: "#ffffff",
+        },
+
+        // Legacy support mappings to prevent immediate breakage (will refactor components after)
         sage: {
-          50: '#f6f7f6',
-          100: '#e3e7e3',
-          200: '#c7cfc7',
-          300: '#a3afa3',
-          400: '#7d8c7d',
-          500: '#627162',
-          600: '#4d5a4d',
-          700: '#3f493f',
-          800: '#353c35',
-          900: '#2d322d',
-        },
-        lavender: {
-          50: '#f7f5f9',
-          100: '#f0ebf4',
-          200: '#e3daea',
-          300: '#cebfdb',
-          400: '#b49dc7',
-          500: '#9a7db0',
-          600: '#836599',
-          700: '#6f5382',
-          800: '#5d466b',
-          900: '#4e3c59',
-        },
-        cream: {
-          50: '#fdfcfb',
-          100: '#faf7f4',
-          200: '#f5ede4',
-          300: '#ebe0d2',
-          400: '#ddc9b4',
-          500: '#c9ab8d',
-          600: '#b38d6d',
-          700: '#967256',
-          800: '#7b5d49',
-          900: '#664e3e',
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a', // Much darker
         },
         midnight: {
-          50: '#f4f5f7',
-          100: '#e3e5ea',
-          200: '#c9ced8',
-          300: '#a4adbf',
-          400: '#7a87a0',
-          500: '#5f6b85',
-          600: '#4d566d',
-          700: '#3f4659',
-          800: '#373d4c',
-          900: '#2a2f3a',
-          950: '#1a1d25',
+          700: '#1e293b',
+          800: '#0f172a',
+          900: '#020617', // Very dark blue/black
+          950: '#000000', // True black
         },
+        cream: {
+          50: '#ffffff', // Stark white
+          100: '#f8fafc',
+        },
+        lavender: {
+          400: '#c084fc', // Bright purple
+          500: '#a855f7',
+          600: '#9333ea',
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -73,19 +83,14 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "slide-in": {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(0)" },
-        },
-        "gentle-bounce": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-5px)" },
-        },
+        "twinkle": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.3" },
+        }
       },
       animation: {
         "fade-in": "fade-in 0.5s ease-out",
-        "slide-in": "slide-in 0.3s ease-out",
-        "gentle-bounce": "gentle-bounce 2s ease-in-out infinite",
+        "twinkle": "twinkle 3s ease-in-out infinite",
       },
     },
   },

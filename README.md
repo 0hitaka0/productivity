@@ -1,6 +1,6 @@
-# 🌙 Clarity - INFJ Productivity Sanctuary
+# 🌙 Clarity - MBTI Productivity Sanctuary
 
-A beautiful, calming productivity app designed specifically for INFJs. Built with intention, care, and aesthetic sensibility.
+A beautiful, calming productivity app designed for your unique MBTI personality. Built with intention, care, and aesthetic sensibility.
 
 ## ✨ Features
 
@@ -10,7 +10,7 @@ A beautiful, calming productivity app designed specifically for INFJs. Built wit
 - **Google Calendar Sync**: Two-way integration with your calendar (coming soon)
 - **Daily Dashboard**: Overview of your intentions, habits, and schedule
 - **Dark Mode**: Cozy midnight theme for late-night reflection
-- **INFJ-Friendly Design**: Calm colors, smooth animations, supportive language
+- **MBTI-Adaptive Design**: Personalized colors, themes, and tips based on your type
 
 ## 🚀 Getting Started
 
@@ -29,7 +29,7 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 ## 🎨 Design Philosophy
 
-This app is built around INFJ values:
+This app is built around mindful values:
 - **Clarity** over clutter
 - **Intention** over urgency
 - **Reflection** over reaction

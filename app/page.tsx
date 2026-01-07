@@ -1,37 +1,64 @@
-export default function Home() {
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-cream-50 via-lavender-50 to-sage-50 dark:from-midnight-950 dark:via-midnight-900 dark:to-midnight-800">
-      <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-screen">
-        <div className="text-center space-y-6 animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-light text-midnight-900 dark:text-cream-50 tracking-tight">
-            Clarity
-          </h1>
+"use client";
 
-          <p className="text-xl md:text-2xl text-sage-700 dark:text-sage-300 font-light max-w-2xl">
-            Your INFJ productivity sanctuary.
-            <br />
-            <span className="text-lavender-600 dark:text-lavender-400">
-              Calm. Intentional. Yours.
-            </span>
-          </p>
+import { useMBTI } from "@/components/providers/mbti-provider";
+import { MBTIType } from "@/lib/mbti-data";
+import { useRouter } from "next/navigation";
+import { StarsBackground } from "@/components/ui/stars-background";
+import { PlanetSelector } from "@/components/planet-selector";
 
-          <div className="pt-8 space-y-4">
-            <div className="glass rounded-2xl p-8 shadow-soft-lg max-w-md mx-auto">
-              <h2 className="text-2xl font-light text-midnight-800 dark:text-cream-100 mb-4">
-                🌙 Building your sanctuary...
-              </h2>
-              <p className="text-sage-600 dark:text-sage-400 leading-relaxed">
-                A space designed for deep work, gentle habits, and meaningful reflection.
-                We're setting up your foundation — one intentional piece at a time.
-              </p>
+export default function LandingPage() {
+    const { setType } = useMBTI();
+    const router = useRouter();
+
+    const handleSelect = (type: MBTIType) => {
+        setType(type);
+        router.push(`/mbti-types/${type.toLowerCase()}`);
+    };
+
+    return (
+        <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden text-white perspective-1000">
+            {/* Removed bg-black to let stars show through properly */}
+            <StarsBackground />
+
+            {/* Header */}
+            <div className="absolute top-10 w-full flex justify-between px-12 z-20">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                        <svg className="w-5 h-5 text-purple-300" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" opacity="0.5" />
+                            <circle cx="12" cy="12" r="5" />
+                        </svg>
+                    </div>
+                    <span className="text-xl font-bold tracking-[0.2em]">CLARITY</span>
+                </div>
+                <div className="flex items-center gap-8 z-50">
+                    <nav className="hidden md:flex gap-8 text-xs uppercase tracking-[0.2em] text-slate-400 font-medium">
+                        <a href="https://www.16personalities.com/free-personality-test" target="_blank" className="hover:text-white transition-colors duration-300">Take Personality Test</a>
+                        <a href="/about" className="hover:text-white transition-colors duration-300">About</a>
+                    </nav>
+
+                    <div className="flex items-center gap-4 pl-8 border-l border-white/10">
+                        <a href="/login" className="text-xs uppercase tracking-[0.1em] text-white/70 hover:text-white transition-colors">
+                            Login
+                        </a>
+                        <a href="/signup" className="relative px-6 py-2 bg-white/5 hover:bg-white/10 text-white text-xs uppercase tracking-[0.1em] rounded-full backdrop-blur-md border border-white/10 transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] group overflow-hidden">
+                            <span className="relative z-10">Sign Up</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <p className="text-sm text-sage-500 dark:text-sage-500 font-light">
-              You got this ✨
-            </p>
-          </div>
+            {/* Orbit Lines Background */}
+            <div className="absolute inset-0 flex items-center justify-center z-0 opacity-10 pointer-events-none">
+                <div className="absolute w-[500px] h-[500px] rounded-full border border-white/10"></div>
+                <div className="absolute w-[800px] h-[800px] rounded-full border border-white/5"></div>
+            </div>
+
+            {/* Reusable Planet Selector */}
+            <div className="z-10 w-full">
+                <PlanetSelector onSelect={handleSelect} buttonText="Explore" />
+            </div>
         </div>
-      </div>
-    </main>
-  );
+    );
 }
