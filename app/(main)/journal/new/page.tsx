@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { JournalEntryEditor } from '@/components/journal-entry-editor';
+import { JournalEntryEditor } from '../components/journal-entry-editor';
 
 function NewEntryContent() {
     const searchParams = useSearchParams();

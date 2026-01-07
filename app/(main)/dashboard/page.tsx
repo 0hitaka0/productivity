@@ -2,7 +2,7 @@
 import { Suspense } from 'react';
 import { getDailyTasks } from '@/lib/actions/task-actions';
 import { getHabits } from '@/lib/actions/habit-actions';
-import { DashboardContent } from '@/components/dashboard/dashboard-content';
+import { DashboardContent } from './components/dashboard-content';
 import { Loader2 } from 'lucide-react';
 import { getAuthenticatedUserId } from '@/lib/actions/habit-actions';
 import { getRecentJournalEntries } from '@/lib/actions/journal-actions';

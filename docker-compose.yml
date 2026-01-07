@@ -1,17 +1,17 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  app:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: hitaka-app
+    container_name: hitaka-web
     restart: always
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/hitaka_db
-      - NEXTAUTH_SECRET=changeme_in_prod
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/productivity?schema=public
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - NEXTAUTH_URL=http://localhost:3000
     depends_on:
       - db
@@ -23,11 +23,13 @@ services:
     container_name: hitaka-db
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: hitaka_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=productivity
+    ports:
+      - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     networks:
       - hitaka-network
 
@@ -36,4 +38,4 @@ networks:
     driver: bridge
 
 volumes:
-  db-data:
+  pgdata:

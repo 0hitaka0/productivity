@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { JournalEntryEditor } from '@/components/journal-entry-editor';
+import { JournalEntryEditor } from '../../components/journal-entry-editor';
 import { Loader2 } from 'lucide-react';
 
 export default function EditEntryPage() {
